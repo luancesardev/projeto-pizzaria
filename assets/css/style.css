@@ -81,7 +81,7 @@ header {
 }
 
 aside {
-    background-color:#9ccbe6;
+    background-color: var(--light-yellow);
     width:0vw;
     font-family:'Hepta Slab', Helvetica, Arial;
     transition:all ease .2s;
@@ -363,16 +363,16 @@ h1 {
 .cart--finalizar {
     padding:20px 30px;
     border-radius:20px;
-    background-color:#48d05f;
+    background-color:var(--main-green);
     color:#FFF;
     cursor:pointer;
     text-align:center;
     margin-top:20px;
-    border:2px solid #63f77c;
+    border:2px solid var(--light-green);
     transition: all ease .2s;
 }
 .cart--finalizar:hover {
-    background-color:#35af4a;
+    background-color: var(--dark-green);
 }
 
 @media (max-width:1000px) {

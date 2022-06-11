@@ -85,14 +85,11 @@ a('.pizzaInfo--size').forEach((size, sizeIndex) => {
 //Evento de adicionar produto ao carrinho
 s('.pizzaInfo--addButton').addEventListener('click', () => {
     let size = parseInt(s('.pizzaInfo--size.selected').getAttribute('data-key'));
-
     let identifier = pizzaJson[modalKey].id + '@' + size;
     let key = cart.findIndex((item) => item.identifier == identifier);
-
     if (key > -1){
         cart[key].qt += modalQtd;
     } else {
-
         cart.push({
             identifier,
             id:pizzaJson[modalKey].id,
@@ -100,5 +97,45 @@ s('.pizzaInfo--addButton').addEventListener('click', () => {
             qt:modalQtd
         });
     }
+    updateCart();
     closeModal();
 });
+
+// Funções para atualizar carrinho
+function updateCart () {
+    if (cart.length > 0) {
+        s('aside').classList.add('show');
+        s('.cart').innerHTML = '';
+        for(let i in cart) {
+            let pizzaItem = pizzaJson.find((item)=>item.id == cart[i].id);
+            let cartItem = s('.models .cart--item').cloneNode(true);
+
+            let pizzaSiteName;
+            switch(cart[i].size){
+                case 0:
+                    pizzaSiteName = 'P';
+                    break;
+                case 1:
+                    pizzaSiteName = 'M';
+                case 2:
+                    pizzaSiteName = 'G';
+                    break;
+            }
+                    
+
+            let pizzaName = `${pizzaItem.name} (${pizzaSiteName})`;
+
+            cartItem.querySelector('img').src = pizzaItem.img;
+            cartItem.querySelector('.cart--item-nome').innerHTML = pizzaName;
+            cartItem.querySelector('.cart--item--qt').innerHTML = cart[i].qt;
+            
+            s('.cart').append(cartItem);
+
+        }
+
+
+
+    } else {
+        s('aside').classList.remove('show');
+    };
+}
