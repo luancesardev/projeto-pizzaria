@@ -8,10 +8,19 @@ const a = (qa) => document.querySelectorAll(qa);
 // Listagem do menu (Pizzas) //
 pizzaJson.map((item, index) => {
     let pizzaItem = s('.models .pizza-item').cloneNode(true);
+    
+
 
     pizzaItem.setAttribute('date-key', index);
     pizzaItem.querySelector('.pizza-item--img img').src = item.img;
-    pizzaItem.querySelector('.pizza-item--price').innerHTML = `R$ ${item.price.toFixed(2)}`;
+    if (index == 0) {
+        let perDesconto = 0.2; 
+        let priceDesconto = pizzaItem.querySelector('.pizza-item--price').innerHTML = item.price * perDesconto;
+        let priceNovo = `R$ ${(item.price - priceDesconto).toFixed(2)}`;
+        pizzaItem.querySelector('.pizza-item--price').innerHTML =  `De R$ ${(item.price).toFixed(2)} por ` + priceNovo;
+    } else {
+        pizzaItem.querySelector('.pizza-item--price').innerHTML = `R$ ${item.price.toFixed(2)}`;
+    };
     pizzaItem.querySelector('.pizza-item--name').innerHTML = item.name;
     pizzaItem.querySelector('.pizza-item--desc').innerHTML = item.description;
     pizzaItem.querySelector('a').addEventListener('click', (e) => {
@@ -111,6 +120,7 @@ s('.menu-closer').addEventListener('click', () => {
     s('aside').style.left = '100vw';
 });
 
+
 // Funções para atualizar carrinho
 function updateCart() {
     s('.menu-openner span').innerHTML = cart.length;
@@ -158,8 +168,6 @@ function updateCart() {
                 cart[i].qt++;
                 updateCart();
             })
-
-
             s('.cart').append(cartItem);
 
         }

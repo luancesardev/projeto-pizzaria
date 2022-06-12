@@ -4,6 +4,9 @@
     --light-green: #32a345;
     --main-yellow: #F5A100;
     --light-yellow: #ffd78c;
+    --main-red: #ff0000;
+    --dark-red: #960101;
+    --light-red: #ff6666;
 
 }
 
@@ -293,7 +296,7 @@ h1 {
 .pizzaInfo--cancelButton {
     display:inline-block;
     cursor:pointer;
-    color: #f00;
+    color: var(--main-red);
     font-weight: bold;
 }
 .pizzaInfo--cancelMobileButton {
@@ -303,7 +306,7 @@ h1 {
     line-height: 40px;
     margin-bottom:30px;
     font-size: 1.5rem;
-    color: #f00;
+    color: var(--main-red);
     font-weight: bold;
 }
 .cart {
