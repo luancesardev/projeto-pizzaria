@@ -5,19 +5,32 @@ let modalKey = 0;
 const s = (qs) => document.querySelector(qs);
 const a = (qa) => document.querySelectorAll(qa);
 
+//GET CART BY SESSION STORAGE
+localStorage.getItem("pizza_cart")
+	? (cart = JSON.parse(localStorage.getItem("pizza_cart")))
+	: (cart = []);
+
+window.onload = function (e) {
+    if (cart.length > 0) {
+        updateCart();
+        s('aside').style.left = '100vw';
+        s('aside').classList.add('show');
+    }
+}
+
 // Listagem do menu (Pizzas) //
 pizzaJson.map((item, index) => {
     let pizzaItem = s('.models .pizza-item').cloneNode(true);
-    
+
 
 
     pizzaItem.setAttribute('date-key', index);
     pizzaItem.querySelector('.pizza-item--img img').src = item.img;
     if (index == 0) {
-        let perDesconto = 0.2; 
+        let perDesconto = 0.2;
         let priceDesconto = pizzaItem.querySelector('.pizza-item--price').innerHTML = item.price * perDesconto;
         let priceNovo = `R$ ${(item.price - priceDesconto).toFixed(2)}`;
-        pizzaItem.querySelector('.pizza-item--price').innerHTML =  `De R$ ${(item.price).toFixed(2)} por ` + priceNovo;
+        pizzaItem.querySelector('.pizza-item--price').innerHTML = `De R$ ${(item.price).toFixed(2)} por ` + priceNovo;
     } else {
         pizzaItem.querySelector('.pizza-item--price').innerHTML = `R$ ${item.price.toFixed(2)}`;
     };
@@ -110,11 +123,11 @@ s('.pizzaInfo--addButton').addEventListener('click', () => {
     closeModal();
 });
 // Evento do botão do carrinho
-s('.menu-openner span').addEventListener('click', () =>{
+s('.menu-openner span').addEventListener('click', () => {
     if (cart.length > 0) {
         s('aside').style.left = 0;
     }
-    
+
 });
 s('.menu-closer').addEventListener('click', () => {
     s('aside').style.left = '100vw';
@@ -183,4 +196,10 @@ function updateCart() {
         s('aside').classList.remove('show');
         s('aside').style.left = '100vw';
     };
+    saveCart();
 }
+
+// Não apagar itens do carrinho quando atualizar a página
+const saveCart = () => {
+    localStorage.setItem("pizza_cart", JSON.stringify(cart));
+};
