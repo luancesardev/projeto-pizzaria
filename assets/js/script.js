@@ -2,6 +2,9 @@
 let cart = [];
 let modalQtd = 1;
 let modalKey = 0;
+let perDesconto = 0.2;
+let priceDesconto = 0;
+let priceNovo = 0;
 const s = (qs) => document.querySelector(qs);
 const a = (qa) => document.querySelectorAll(qa);
 
@@ -27,9 +30,8 @@ pizzaJson.map((item, index) => {
     pizzaItem.setAttribute('date-key', index);
     pizzaItem.querySelector('.pizza-item--img img').src = item.img;
     if (index == 0) {
-        let perDesconto = 0.2;
-        let priceDesconto = pizzaItem.querySelector('.pizza-item--price').innerHTML = item.price * perDesconto;
-        let priceNovo = `R$ ${(item.price - priceDesconto).toFixed(2)}`;
+        priceDesconto = pizzaItem.querySelector('.pizza-item--price').innerHTML = item.price * perDesconto;
+        priceNovo = `R$ ${(item.price - priceDesconto).toFixed(2)}`;
         pizzaItem.querySelector('.pizza-item--price').innerHTML = `De R$ ${(item.price).toFixed(2)} por ` + priceNovo;
     } else {
         pizzaItem.querySelector('.pizza-item--price').innerHTML = `R$ ${item.price.toFixed(2)}`;
@@ -46,7 +48,13 @@ pizzaJson.map((item, index) => {
         s('.pizzaBig img').src = pizzaJson[key].img;
         s('.pizzaInfo h1').innerHTML = pizzaJson[key].name;
         s('.pizzaInfo--desc').innerHTML = pizzaJson[key].description;
-        s('.pizzaInfo--actualPrice').innerHTML = `R$ ${pizzaJson[key].price.toFixed(2)}`;
+        if (modalKey == 0) {
+            priceDesconto = item.price * perDesconto;
+            priceNovo = `R$ ${(item.price - priceDesconto).toFixed(2)}`;
+            s('.pizzaInfo--actualPrice').innerHTML = priceNovo;
+        } else {
+            s('.pizzaInfo--actualPrice').innerHTML = `R$ ${pizzaJson[key].price.toFixed(2)}`;
+        };
         s('.pizzaInfo--size.selected').classList.remove('selected');
         a('.pizzaInfo--size').forEach((size, sizeIndex) => {
             if (sizeIndex == 2) {
@@ -145,25 +153,32 @@ function updateCart() {
         let subtotal = 0;
         let desconto = 0;
         let total = 0;
+        let splitPrice = priceNovo.split (" ");
 
         for (let i in cart) {
             let pizzaItem = pizzaJson.find((item) => item.id == cart[i].id);
-            subtotal += pizzaItem.price * cart[i].qt;
+            if (pizzaItem.id == 1) {   
+                subtotal += +splitPrice[1] * cart[i].qt;
+            } else {
+                subtotal += pizzaItem.price * cart[i].qt;
+            };
+            
             let cartItem = s('.models .cart--item').cloneNode(true);
 
-            let pizzaSiteName;
+            let pizzaSizeName;
             switch (cart[i].size) {
                 case 0:
-                    pizzaSiteName = 'P';
+                    pizzaSizeName = 'P';
                     break;
                 case 1:
-                    pizzaSiteName = 'M';
+                    pizzaSizeName = 'M';
+                    break;
                 case 2:
-                    pizzaSiteName = 'G';
+                    pizzaSizeName = 'G';
                     break;
             }
 
-            let pizzaName = `${pizzaItem.name} (${pizzaSiteName})`;
+            let pizzaName = `${pizzaItem.name} (${pizzaSizeName})`;
 
             cartItem.querySelector('img').src = pizzaItem.img;
             cartItem.querySelector('.cart--item-nome').innerHTML = pizzaName;
@@ -182,9 +197,9 @@ function updateCart() {
                 updateCart();
             })
             s('.cart').append(cartItem);
-
+            
         }
-
+        
         desconto = subtotal * 0.1;
         total = subtotal - desconto;
 
